@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,9 @@ public class Hacker : MonoBehaviour
 {
     // Game State
     int level;
+    string password;
+    string hint;
+    int guessCounter;
     enum Screen { Start, MainMenu, Password, Win };
     Screen currentScreen = Screen.MainMenu;
 
@@ -38,6 +42,10 @@ public class Hacker : MonoBehaviour
         else if (currentScreen == Screen.MainMenu)
         {
             RunMainMenu(input);
+        }
+        else if (currentScreen == Screen.Password)
+        {
+            CheckPassword(input);
         }
     }
 
@@ -88,12 +96,100 @@ public class Hacker : MonoBehaviour
     private void StartGame()
     {
         currentScreen = Screen.Password;
-
+        Terminal.ClearScreen();
         Terminal.WriteLine("You have initialized level " + level);
+        Terminal.WriteLine("Please stand by while your level is loading..");
+        Thread.Sleep(3500);
+
+        if (currentScreen == Screen.Password)
+        {
+            switch (level)
+            {
+                case 1:
+                    Terminal.ClearScreen();
+                    setPassword();
+
+                    Terminal.WriteLine("Dungeons & Dragon question..");
+                    Terminal.WriteLine("Please enter city name..");
+
+                    break;
+                case 2:
+                    Terminal.ClearScreen();
+                    setPassword();
+
+                    Terminal.WriteLine("Dungeon & Dragon question");
+                    Terminal.WriteLine("Please enter a city name");
+                    break;
+                default:
+                    break;
+            }
+
+        }
+        else
+        {
+            Terminal.WriteLine("You must select an asset.");
+        }
+    }
+
+    private void CheckPassword(string input)
+    {
+        if (currentScreen == Screen.Password)
+        {
+            if (input == password)
+            {
+                WinScreen();
+            }
+            else
+            {
+                guessCounter++;
+                Terminal.WriteLine("Incorrect answer, please try again");
+            }
+        }
+    }
+
+    private void WinScreen()
+    {
+        Terminal.ClearScreen();
+        Terminal.WriteLine("Congratulations");
+        Terminal.WriteLine("You have completed level " + level);
+        Terminal.WriteLine("Write menu to get back.");
+    }
+
+    private void setPassword()
+    {
+        switch (level)
+        {
+            case 1:
+                password = "Waterdeep";
+                hint = "The largest city on the Sword Coast";
+                break;
+            case 2:
+                password = "Icewind Dale";
+                hint = "The coldest city on the Sword Coast";
+                break;
+            default:
+                break;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (level == 1)
+        {
+            if (guessCounter >= 3)
+            {
+                Terminal.WriteLine(hint);
+                guessCounter = 0;
+            }
+
+        } else
+        {
+            if (guessCounter >= 5)
+            {
+                Terminal.WriteLine(hint);
+                guessCounter = 0;
+            }
+        }
     }
 }
