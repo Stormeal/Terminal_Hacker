@@ -11,6 +11,8 @@ public class Hacker : MonoBehaviour
     string password;
     string hint;
     int guessCounter;
+    System.Random rnd = new System.Random();
+
     enum Screen { Start, MainMenu, Password, Win };
     Screen currentScreen = Screen.MainMenu;
 
@@ -35,17 +37,17 @@ public class Hacker : MonoBehaviour
 
     void OnUserInput(string input)
     {
-        if (input == "menu")
+        if (input.ToLower() == "menu")
         {
             ShowMainMenu();
         }
         else if (currentScreen == Screen.MainMenu)
         {
-            RunMainMenu(input);
+            RunMainMenu(input.ToLower());
         }
         else if (currentScreen == Screen.Password)
         {
-            CheckPassword(input);
+            CheckPassword(input.ToLower());
         }
     }
 
@@ -106,6 +108,8 @@ public class Hacker : MonoBehaviour
             switch (level)
             {
                 case 1:
+
+
                     Terminal.ClearScreen();
                     setPassword();
 
@@ -131,6 +135,7 @@ public class Hacker : MonoBehaviour
         }
     }
 
+
     private void CheckPassword(string input)
     {
         if (currentScreen == Screen.Password)
@@ -155,17 +160,55 @@ public class Hacker : MonoBehaviour
         Terminal.WriteLine("Write menu to get back.");
     }
 
+    public static int GetRandomNumber(System.Random rndObject)
+    {
+        int nr = rndObject.Next(1, 3);
+
+        return nr;
+    }
+    
     private void setPassword()
     {
+
         switch (level)
         {
             case 1:
-                password = "Waterdeep";
-                hint = "The largest city on the Sword Coast";
+                switch (GetRandomNumber(rnd))
+                {
+                    case 1:
+                        password = "book";
+                        hint = "Pages might be included";
+                        break;
+                    case 2:
+                        password = "borrow";
+                        hint = "You get something teporarily";
+                        break;
+                    case 3:
+                        password = "return";
+                        hint = "When done reading.";
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case 2:
-                password = "Icewind Dale";
-                hint = "The coldest city on the Sword Coast";
+                switch (GetRandomNumber(rnd))
+                {
+                    case 1:
+                        password = "warrant";
+                        hint = "Before they can enter your home";
+                        break;
+                    case 2:
+                        password = "culprit";
+                        hint = "A person responsible for a crime";
+                        break;
+                    case 3:
+                        password = "detective";
+                        hint = "Officer responsible for solving a crime";
+                        break;
+                    default:
+                        break;
+                }
                 break;
             default:
                 break;
@@ -183,7 +226,8 @@ public class Hacker : MonoBehaviour
                 guessCounter = 0;
             }
 
-        } else
+        }
+        else
         {
             if (guessCounter >= 5)
             {
