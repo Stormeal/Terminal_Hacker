@@ -15,6 +15,7 @@ public class Hacker : MonoBehaviour
 
     enum Screen { Start, MainMenu, Password, Password2, Win };
     Screen currentScreen = Screen.MainMenu;
+    const string menu = "You may write menu anytime";
 
 
     // Start is called before the first frame update
@@ -42,6 +43,11 @@ public class Hacker : MonoBehaviour
         if (input.ToLower() == "menu")
         {
             ShowMainMenu();
+        }
+        else if (input == "quit" || input == "exit" || input == "close")
+        {
+            Terminal.WriteLine("If on the browser, close the tab");
+            Application.Quit();
         }
         else if (currentScreen == Screen.MainMenu)
         {
@@ -119,6 +125,7 @@ public class Hacker : MonoBehaviour
     {
         SetPasswordScreen();
         Terminal.WriteLine("You have initialized level " + level);
+        Terminal.WriteLine(menu);
 
         if (currentScreen == Screen.Password)
         {
